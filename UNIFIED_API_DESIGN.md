@@ -23,6 +23,14 @@
 }
 ```
 
+**EtempMail 指定域名示例**:
+```json
+{
+  "provider": "etempmail",
+  "domain": "ohm.edu.pl"  // 可选：ohm.edu.pl, cross.edu.pl, usa.edu.pl, beta.edu.pl
+}
+```
+
 **Response**:
 ```json
 {
@@ -74,6 +82,14 @@
 {
   "address": "test123@somoj.com", 
   "provider": "mailtm"
+}
+```
+
+**方式3: EtempMail 指定域名**
+```json
+{
+  "address": "user123@ohm.edu.pl",
+  "provider": "etempmail"
 }
 ```
 
@@ -171,7 +187,7 @@ POST /mail/content
 | **mailtm** | Bearer Token | 需要accessToken，在创建邮箱时返回 |
 | **minmail** | Visitor ID | 无需accessToken，内部使用visitor-id header |
 | **tempmailplus** | 无认证 | 完全无需认证 |
-| **etempmail** | 无认证 | 完全无需认证 |
+| **etempmail** | 无认证 | 完全无需认证，支持指定域名 |
 | **vanishpost** | Session | 使用cookies管理会话 |
 
 ## 设计优势

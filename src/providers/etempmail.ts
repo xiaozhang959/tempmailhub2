@@ -46,7 +46,7 @@ export class EtempMailProvider implements IMailProvider {
     createEmail: true,
     listEmails: true,
     getEmailContent: true,
-    customDomains: false, // EtempMail API 不支持用户指定域名，由服务端随机分配
+    customDomains: true, // 支持指定域名（通过 changeEmailAddress 接口）
     customPrefix: false,
     emailExpiration: true,
     realTimeUpdates: false,
@@ -65,13 +65,21 @@ export class EtempMailProvider implements IMailProvider {
   private baseUrl = 'https://etempmail.com';
   private sessionId: string = '';
   
-  // 支持的域名列表
+  // 支持的域名列表和对应的ID
   private readonly domains = [
     'cross.edu.pl',
-    'ohm.edu.pl',
+    'ohm.edu.pl', 
     'usa.edu.pl',
     'beta.edu.pl'
   ];
+
+  // 域名ID映射表
+  private readonly domainIdMapping: Record<string, string> = {
+    'ohm.edu.pl': '21',
+    'cross.edu.pl': '20', 
+    'usa.edu.pl': '19',
+    'beta.edu.pl': '18'
+  };
 
   constructor(public readonly config: ChannelConfiguration) {}
 
@@ -90,8 +98,16 @@ export class EtempMailProvider implements IMailProvider {
         await this.getServerTime();
       }
 
-      // 注意：EtempMail API 不支持用户指定域名，由服务端随机分配
-      // request.domain 参数会被忽略，实际域名由服务端从支持列表中随机选择
+      // 处理域名选择
+      if (request.domain && this.domainIdMapping[request.domain]) {
+        // 用户指定了域名
+        await this.changeEmailAddress(this.domainIdMapping[request.domain]);
+      } else if (!request.domain) {
+        // 用户没有指定域名，随机选择一个
+        const domainIds = Object.values(this.domainIdMapping);
+        const randomId = domainIds[Math.floor(Math.random() * domainIds.length)];
+        await this.changeEmailAddress(randomId);
+      }
 
       const response = await httpClient.post<EtempMailAddressResponse>(
         `${this.baseUrl}/getEmailAddress`,
@@ -423,6 +439,45 @@ export class EtempMailProvider implements IMailProvider {
     } catch (error) {
       // 使用默认会话ID
       this.sessionId = '51sutdevslriv5ft7mdqkats3a9l5bd6';
+    }
+  }
+
+  private async changeEmailAddress(domainId: string): Promise<void> {
+    try {
+      const response = await httpClient.post(
+        `${this.baseUrl}/changeEmailAddress`,
+        `id=${domainId}`,
+        {
+          headers: {
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+            'accept-language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
+            'cache-control': 'max-age=0',
+            'content-type': 'application/x-www-form-urlencoded',
+            'origin': this.baseUrl,
+            'referer': `${this.baseUrl}/zh`,
+            'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"macOS"',
+            'sec-fetch-dest': 'document',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-site': 'same-origin',
+            'sec-fetch-user': '?1',
+            'sec-gpc': '1',
+            'upgrade-insecure-requests': '1',
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+            'cookie': `ci_session=${this.sessionId}`
+          },
+          timeout: this.config.timeout
+        }
+      );
+      
+      // 返回307重定向是正常的，表示域名设置成功
+      if (response.status === 307 || response.ok) {
+        console.log(`EtempMail domain changed to ID: ${domainId}`);
+      }
+    } catch (error) {
+      console.warn(`Failed to change EtempMail domain: ${error}`);
+      // 不抛出错误，继续使用默认域名
     }
   }
 

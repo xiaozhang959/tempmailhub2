@@ -100,6 +100,11 @@ export class VanishPostProvider implements IMailProvider {
     try {
       this.updateStats('request');
 
+      // 生成session ID（如果还没有）
+      if (!this.sessionId) {
+        this.sessionId = this.generateSessionId();
+      }
+
       const response = await httpClient.post<VanishPostGenerateResponse>(
         `${this.baseUrl}/api/generate`,
         '',
@@ -121,6 +126,13 @@ export class VanishPostProvider implements IMailProvider {
       );
 
       if (!response.ok) {
+        if (response.status === 429) {
+          throw this.createError(
+            ChannelErrorType.RATE_LIMIT_ERROR,
+            'VanishPost 速率限制：每个IP地址15分钟内只能创建1个邮箱。请等待15分钟后重试，或使用其他邮箱提供商（如 mailtm、minmail 等）。',
+            response.status
+          );
+        }
         throw this.createError(
           ChannelErrorType.API_ERROR,
           `VanishPost API returned ${response.status}: ${response.statusText}`,

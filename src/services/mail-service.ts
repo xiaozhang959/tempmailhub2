@@ -265,7 +265,8 @@ export class MailService {
       'usa.edu.pl': 'etempmail',
       'beta.edu.pl': 'etempmail',
       'genmacos.com': 'vanishpost',
-      'vexdren.org': 'vanishpost'
+      'vexdren.org': 'vanishpost',
+      'bouldermac.com': 'vanishpost'
     };
 
     const providerName = domainMapping[domain];

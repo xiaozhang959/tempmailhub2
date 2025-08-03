@@ -116,7 +116,7 @@ GET /api/mail/providers/stats
 | MinMail | atminmail.com | 自动过期、高可用 |
 | TempMail Plus | mailto.plus, fexpost.com | 多域名支持 |
 | Mail.tm | somoj.com | 需要注册、API 稳定 |
-| EtempMail | ohm.edu.pl, cross.edu.pl | 教育域名 |
+| EtempMail | ohm.edu.pl, cross.edu.pl, usa.edu.pl, beta.edu.pl | 教育域名，支持指定域名 |
 | VanishPost | genmacos.com | 15分钟自动过期 |
 
 ## ⚙️ 配置

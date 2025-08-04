@@ -12,9 +12,4 @@ compatibility_date = "2024-01-01"
 vars = { ENVIRONMENT = "production" }
 
 [env.development]
-vars = { ENVIRONMENT = "development" }
-
-# 资源限制
-[limits]
-cpu_ms = 10000
-memory_mb = 128 
+vars = { ENVIRONMENT = "development" } 

@@ -12,6 +12,8 @@
     "build": "tsc",
     "deploy:cloudflare": "wrangler deploy",
     "deploy:vercel": "vercel --prod",
+    "deploy:deno": "deno run -A scripts/deploy-deno.js",
+    "deploy:netlify": "netlify deploy --prod",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "lint": "eslint src/**/*.ts",
@@ -41,10 +43,10 @@
     "vercel",
     "api"
   ],
-  "author": "Your Name",
+  "author": "hzruo",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/tempmailhub.git"
+    "url": "https://github.com/hzruo/tempmailhub.git"
   }
 } 

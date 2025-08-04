@@ -1,0 +1,9 @@
+{
+  "tasks": {
+    "start": "deno run --allow-net --allow-env --allow-read src/index.ts"
+  },
+  "imports": {
+    "hono": "https://deno.land/x/hono@v3.11.11/mod.ts",
+    "hono/bearer-auth": "https://deno.land/x/hono@v3.11.11/middleware/bearer-auth/index.ts"
+  }
+} 

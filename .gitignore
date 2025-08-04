@@ -5,5 +5,4 @@ worker.js
 *.log
 .env
 .env.local
-wrangler.toml
 .DS_Store 

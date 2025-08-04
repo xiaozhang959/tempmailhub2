@@ -4,7 +4,7 @@
 
 [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/hzruo/tempmailhub)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/hzruo/tempmailhub)
-[![Deploy to Deno Deploy](https://deno.com/deno-deploy-button.svg)](https://dash.deno.com/new?url=https://github.com/hzruo/tempmailhub&env=TEMPMAILHUB_API_KEY)
+[![Deploy on Deno](https://deno.com/button)](https://app.deno.com/new?clone=https://github.com/hzruo/tempmailhub)
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/hzruo/tempmailhub)
 
 ## 🌟 功能特性
@@ -101,7 +101,7 @@ curl -X POST http://localhost:8787/api/mail/list \
 
 [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/hzruo/tempmailhub)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/hzruo/tempmailhub)
-[![Deploy to Deno Deploy](https://deno.com/deno-deploy-button.svg)](https://dash.deno.com/new?url=https://github.com/hzruo/tempmailhub)
+[![Deploy on Deno](https://deno.com/button)](https://app.deno.com/new?clone=https://github.com/hzruo/tempmailhub)
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/hzruo/tempmailhub)
 
 #### 一键部署流程
@@ -116,8 +116,9 @@ curl -X POST http://localhost:8787/api/mail/list \
    - 配置项目名称和环境变量（可选）
    - 点击"Deploy"完成部署
 
-3. **Deno Deploy**
+3. **Deno**
    - 点击按钮后，授权GitHub仓库
+   - 选择"Clone"选项克隆仓库
    - 自动创建新项目并部署
    - 可在Deno Dashboard配置环境变量
 

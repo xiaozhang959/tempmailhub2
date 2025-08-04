@@ -1,9 +1,13 @@
 {
   "tasks": {
-    "start": "deno run --allow-net --allow-env --allow-read src/index.ts"
+    "start": "deno run --allow-net --allow-env --allow-read src/index.ts",
+    "dev": "deno run --allow-net --allow-env --allow-read --watch src/index.ts"
   },
   "imports": {
-    "hono": "https://deno.land/x/hono@v3.11.11/mod.ts",
-    "hono/bearer-auth": "https://deno.land/x/hono@v3.11.11/middleware/bearer-auth/index.ts"
+    "hono": "https://deno.land/x/hono@v4.6.3/mod.ts",
+    "hono/cors": "https://deno.land/x/hono@v4.6.3/middleware/cors/index.ts",
+    "hono/logger": "https://deno.land/x/hono@v4.6.3/middleware/logger/index.ts",
+    "hono/pretty-json": "https://deno.land/x/hono@v4.6.3/middleware/pretty-json/index.ts",
+    "hono/bearer-auth": "https://deno.land/x/hono@v4.6.3/middleware/bearer-auth/index.ts"
   }
 } 

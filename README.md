@@ -30,11 +30,7 @@
 
 ## 🚀 快速开始
 
-### 环境要求
-
-- Node.js 18+ 或 Deno 1.30+ 或 Bun 1.0+
-
-### 安装与启动
+### 本地开发
 
 ```bash
 # 克隆项目
@@ -44,28 +40,16 @@ cd tempmailhub
 # 安装依赖
 npm install
 
-# 启动开发服务器（推荐 Cloudflare Workers）
+# 启动开发服务器
 npm run dev
 
 # 访问服务
 open http://localhost:8787
 ```
 
-### 🔐 安全配置（可选）
+### 一键部署
 
-设置 API Key 以启用认证保护：
-
-```bash
-# 本地开发
-export TEMPMAILHUB_API_KEY="your-secret-api-key"
-
-# 或创建 .env 文件
-echo "TEMPMAILHUB_API_KEY=your-secret-api-key" > .env
-```
-
-**认证效果**：
-- 🔓 未设置：所有端点公开访问
-- 🔒 已设置：核心邮件操作需要 Bearer Token 认证
+点击上方任意部署按钮，即可一键部署到对应平台。
 
 ## 📖 文档
 
@@ -73,6 +57,7 @@ echo "TEMPMAILHUB_API_KEY=your-secret-api-key" > .env
 |------|------|
 | [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) | 📚 **完整API文档** - 接口说明、使用示例、测试方法 |
 | [API_SECURITY.md](./API_SECURITY.md) | 🔐 **安全配置** - API Key 认证详细配置 |
+| [DEPLOYMENT.md](./DEPLOYMENT.md) | 🚀 **部署指南** - 多平台部署详细说明 |
 
 ## 🎯 支持的服务商
 
@@ -107,131 +92,8 @@ curl -X POST http://localhost:8787/api/mail/list \
   }'
 ```
 
-> 💡 **提示**: 详细的 API 使用说明、参数介绍、错误处理请查看 [API_DOCUMENTATION.md](./API_DOCUMENTATION.md)
-
-## 🚀 部署
-
-### 一键部署
-
-点击下方按钮，一键部署到您喜欢的平台：
-
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/hzruo/tempmailhub)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/hzruo/tempmailhub)
-[![Deploy on Deno](https://deno.com/button)](https://app.deno.com/new?clone=https://github.com/hzruo/tempmailhub)
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/hzruo/tempmailhub)
-
-#### 一键部署流程
-
-1. **Cloudflare Workers**
-   - 点击按钮后，授权GitHub仓库访问
-   - 自动部署到您的Cloudflare账户
-   - 部署后可在Cloudflare Dashboard设置环境变量（可选）
-
-2. **Vercel**
-   - 点击按钮后，导入GitHub仓库
-   - 配置项目名称和环境变量（可选）
-   - 点击"Deploy"完成部署
-
-3. **Deno**
-   - 点击按钮后，授权GitHub仓库
-   - 选择"Clone"选项克隆仓库
-   - 自动创建新项目并部署
-   - 可在Deno Dashboard配置环境变量
-
-4. **Netlify**
-   - 点击按钮后，连接GitHub仓库
-   - 保持默认构建设置
-   - 点击"Deploy site"完成部署
-
-> 💡 **提示**：所有平台部署后，建议设置 `TEMPMAILHUB_API_KEY` 环境变量以启用API认证。
-
-### Docker 部署
-
-#### 使用 Docker Compose (推荐)
-
-1. 克隆仓库并进入项目目录
-   ```bash
-   git clone https://github.com/hzruo/tempmailhub.git
-   cd tempmailhub
-   ```
-
-2. 启动服务
-   ```bash
-   docker-compose up -d
-   ```
-
-3. 访问服务
-   ```bash
-   curl http://localhost:8787/health
-   ```
-
-#### 使用 Docker 命令
-
-```bash
-# 构建镜像
-docker build -t tempmailhub .
-
-# 运行容器
-docker run -d -p 8787:8787 --name tempmailhub tempmailhub
-
-# 设置API Key (可选)
-docker run -d -p 8787:8787 -e TEMPMAILHUB_API_KEY=your-secret-key --name tempmailhub tempmailhub
-```
-
-#### 使用预构建镜像
-
-```bash
-# 拉取最新镜像
-docker pull ghcr.io/hzruo/tempmailhub:latest
-
-# 运行容器
-docker run -d -p 8787:8787 --name tempmailhub ghcr.io/hzruo/tempmailhub:latest
-```
-
-### 手动部署
-
-#### Cloudflare Workers
-
-```bash
-# 部署
-npm run deploy:cloudflare
-
-# 设置 API Key（可选）
-wrangler secret put TEMPMAILHUB_API_KEY
-```
-
-#### Vercel
-
-```bash
-# 部署
-npm run deploy:vercel
-
-# 设置环境变量（可选）
-vercel env add TEMPMAILHUB_API_KEY
-```
-
-#### Deno Deploy
-
-```bash
-# 设置环境变量
-export DENO_PROJECT=your-project-name
-
-# 部署
-npm run deploy:deno
-```
-
-#### Netlify
-
-```bash
-# 安装Netlify CLI
-npm install -g netlify-cli
-
-# 登录
-netlify login
-
-# 部署
-npm run deploy:netlify
-```
+> 💡 **详细使用说明**: 请查看 [API_DOCUMENTATION.md](./API_DOCUMENTATION.md)  
+> 🚀 **部署指南**: 请查看 [DEPLOYMENT.md](./DEPLOYMENT.md)
 
 ## 🏗️ 项目架构
 
@@ -245,15 +107,9 @@ TempMailHub/
 │   └── index.ts           # 应用入口
 ├── API_DOCUMENTATION.md   # 完整API文档
 ├── API_SECURITY.md        # 安全配置文档
+├── DEPLOYMENT.md          # 部署指南
 └── README.md              # 项目说明
 ```
-
-### 核心组件
-
-- **Provider 适配器**: 统一不同服务商的 API 接口
-- **双层认证**: TempMailHub API Key + Provider AccessToken
-- **服务层**: 统一业务逻辑和错误处理
-- **类型安全**: 完整的 TypeScript 支持
 
 ## 🔧 开发
 
@@ -263,17 +119,14 @@ TempMailHub/
 2. 实现 `IMailProvider` 接口
 3. 在 `src/providers/index.ts` 注册服务商
 
-### 测试
+### 构建和测试
 
 ```bash
-# 运行测试
-npm test
-```
-
-### 构建
-
-```bash
+# 构建
 npm run build
+
+# 测试
+npm test
 ```
 
 ## 🤝 贡献
@@ -304,20 +157,9 @@ npm run build
 - 🔸 使用本服务造成的任何后果由**用户自行承担**
 - 🔸 开发者**不承担**因使用本项目而产生的任何法律责任
 
-
 ## 📄 许可证
 
 本项目基于 [MIT 许可证](LICENSE) 开源。
-
-这意味着您可以：
-- ✅ 商业使用
-- ✅ 修改代码
-- ✅ 分发代码
-- ✅ 私人使用
-
-但必须：
-- 📋 包含许可证和版权声明
-- 📋 提供源代码访问（如果分发）
 
 ## 🙏 致谢
 

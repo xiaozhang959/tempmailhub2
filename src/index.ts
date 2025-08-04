@@ -497,10 +497,10 @@ app.get('/api/info', (c) => {
         { name: 'VanishPost', domains: ['服务端分配'], customizable: false }
       ],
       authentication: {
-        enabled: getAuthConfig().enabled,
+        enabled: getAuthConfig(c.env).enabled,
         method: 'Bearer Token',
         header: 'Authorization: Bearer <api-key>',
-        note: getAuthConfig().enabled 
+        note: getAuthConfig(c.env).enabled 
           ? 'API Key authentication is enabled. Protected endpoints require valid API key.'
           : 'API Key authentication is disabled. All endpoints are publicly accessible.'
       },

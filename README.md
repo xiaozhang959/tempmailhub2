@@ -1,11 +1,22 @@
 # TempMailHub
 
-一个基于 Hono 框架的多平台临时邮件网关服务，聚合多个临时邮箱服务商，提供统一的 API 接口。
+<div align="center">
+
+**🌟 一个现代化的跨平台临时邮件网关服务 🌟**
+
+基于 Hono 框架构建的多平台临时邮箱 API 聚合服务
 
 [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/hzruo/tempmailhub)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/hzruo/tempmailhub)
 [![Deploy on Deno](https://deno.com/button)](https://app.deno.com/new?clone=https://github.com/hzruo/tempmailhub)
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/hzruo/tempmailhub)
+
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-4.9+-blue.svg)
+![Hono](https://img.shields.io/badge/Hono-4.6+-orange.svg)
+![Docker](https://img.shields.io/badge/Docker-Ready-green.svg)
+
+</div>
 
 ## 🌟 功能特性
 
@@ -15,6 +26,7 @@
 - 🔄 **智能重试**: 内置重试机制和错误处理
 - 📊 **健康监控**: 实时监控各渠道状态和统计信息
 - 🛡️ **类型安全**: 完整的 TypeScript 类型定义
+- 🐳 **容器化**: 支持 Docker 部署和 GitHub Actions 自动构建
 
 ## 🚀 快速开始
 
@@ -25,6 +37,10 @@
 ### 安装与启动
 
 ```bash
+# 克隆项目
+git clone https://github.com/hzruo/tempmailhub.git
+cd tempmailhub
+
 # 安装依赖
 npm install
 
@@ -270,9 +286,38 @@ npm run build
 4. 推送分支 (`git push origin feature/AmazingFeature`)
 5. 打开 Pull Request
 
+## ⚠️ 免责声明
+
+本项目 **TempMailHub** 仅供**学习、研究和测试**目的使用。请用户遵守以下条款：
+
+### 使用限制
+
+- ❌ **禁止用于任何非法、违规或恶意活动**
+- ❌ **禁止用于垃圾邮件发送或网络攻击**
+- ❌ **禁止用于绕过任何服务的正当验证机制**
+- ❌ **禁止用于任何可能损害第三方利益的行为**
+
+### 责任声明
+
+- 🔸 本项目**不存储**任何用户邮件内容或个人信息
+- 🔸 本项目仅作为**API聚合器**，不对第三方服务的可用性负责
+- 🔸 使用本服务造成的任何后果由**用户自行承担**
+- 🔸 开发者**不承担**因使用本项目而产生的任何法律责任
+
+
 ## 📄 许可证
 
-本项目基于 MIT 许可证开源 - 查看 [LICENSE](LICENSE) 文件了解详情。
+本项目基于 [MIT 许可证](LICENSE) 开源。
+
+这意味着您可以：
+- ✅ 商业使用
+- ✅ 修改代码
+- ✅ 分发代码
+- ✅ 私人使用
+
+但必须：
+- 📋 包含许可证和版权声明
+- 📋 提供源代码访问（如果分发）
 
 ## 🙏 致谢
 
@@ -292,8 +337,14 @@ npm run build
 > 
 > 本项目 **TempMailHub** 仅提供 **API 聚合服务**，不提供 Web UI 界面。
 > 
-> 如需**图形界面体验**，请直接访问上述各供应商的官方网站。
+> 如需**图形界面体验**，请直接访问上述各临时邮箱提供方的官方网站～
 
 ---
 
-**注意**: 本项目仅供学习和测试使用，请遵守各服务商的使用条款和法律法规。
+<div align="center">
+
+**如果这个项目对您有帮助，请给我们一个 ⭐**
+
+Made with ❤️ by [TempMailHub Contributors](https://github.com/hzruo/tempmailhub/contributors)
+
+</div>

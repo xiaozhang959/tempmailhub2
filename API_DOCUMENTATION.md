@@ -1,5 +1,118 @@
 # TempMailHub API 文档
 
+## 🏗️ 系统架构
+
+### 整体架构图
+
+```mermaid
+graph LR
+    Client[客户端] --> Auth[API认证中间件]
+    Auth --> Service[邮件服务层]
+    Service --> Manager[Provider管理器]
+    Manager --> Adapter[Provider适配器]
+    Adapter --> External[外部API]
+
+    %% 样式设置
+    classDef clientClass fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef authClass fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef serviceClass fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef managerClass fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef adapterClass fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef externalClass fill:#ffebee,stroke:#d32f2f,stroke-width:2px
+
+    class Client clientClass
+    class Auth authClass
+    class Service serviceClass
+    class Manager managerClass
+    class Adapter adapterClass
+    class External externalClass
+```
+
+**架构说明**：
+- 📱 **客户端**：发起API请求（Web、Mobile、API Client等）
+- 🔐 **API认证中间件**：验证TempMailHub API Key
+- 🔧 **邮件服务层**：核心业务逻辑，统一接口处理
+- 📋 **Provider管理器**：智能选择最优Provider，性能优先级管理
+- 🔌 **Provider适配器**：统一各邮件服务商的接口适配
+- 🌐 **外部API**：各个临时邮箱服务提供商的原生API
+
+### 数据流时序图
+
+```mermaid
+sequenceDiagram
+    participant Client as 客户端
+    participant Auth as API认证中间件
+    participant Service as 邮件服务层
+    participant Manager as Provider管理器
+    participant Adapter as Provider适配器
+    participant External as 外部API
+
+    Note over Client,External: 创建邮箱流程
+
+    Client->>+Auth: POST /api/mail/create<br/>Bearer Token + {provider?, domain?, prefix?}
+    Auth->>Auth: 验证API Key
+    Auth->>+Service: createEmail(request)
+    Service->>Service: 分析capabilities需求<br/>(customDomains, customPrefix, etc.)
+    
+    alt 指定了provider
+        Service->>+Manager: getProvider(providerName)
+    else 自动选择
+        Service->>+Manager: getBestProvider(capabilities)
+        Manager->>Manager: 性能优先级排序<br/>(TempMailPlus > MinMail > ...)
+    end
+    
+    Manager-->>-Service: 返回Provider实例
+    Service->>+Adapter: createEmail(request)
+    Adapter->>+External: 调用具体API<br/>(各Provider API不同)
+    External-->>-Adapter: 邮箱创建成功<br/>{address, accessToken?, domain, etc.}
+    Adapter-->>-Service: 返回ChannelResponse<CreateEmailResponse>
+    Service-->>-Auth: 返回ApiResponse结果
+    Auth-->>-Client: JSON响应 + provider名称
+
+    Note over Client,External: 获取邮件列表流程
+
+    Client->>+Auth: POST /api/mail/list<br/>{address, provider?, accessToken?}
+    Auth->>+Service: getEmails(query)
+    
+    alt 指定了provider
+        Service->>+Manager: getProvider(providerName)
+    else 自动推断
+        Service->>Service: inferProviderFromEmail(address)<br/>基于域名映射
+        Service->>+Manager: getProvider(inferredName)
+    end
+    
+    Manager-->>-Service: 返回Provider实例
+    Service->>+Adapter: getEmails(query)
+    Note over Adapter: query包含address, accessToken等
+    Adapter->>+External: 调用邮件列表API<br/>(token处理因Provider而异)
+    External-->>-Adapter: 邮件列表数据
+    Adapter->>Adapter: 数据格式标准化<br/>textContent摘要处理
+    Adapter-->>-Service: 返回ChannelResponse<EmailMessage[]>
+    Service-->>-Auth: 返回ApiResponse结果
+    Auth-->>-Client: JSON响应 + provider名称
+
+    Note over Client,External: 获取邮件详情流程
+
+    Client->>+Auth: POST /api/mail/content<br/>{address, id, provider?, accessToken?}
+    Auth->>+Service: getEmailContent(address, id, provider?, accessToken?)
+    
+    alt 指定了provider
+        Service->>+Manager: getProvider(providerName)
+    else 自动推断
+        Service->>Service: inferProviderFromEmail(address)
+        Service->>+Manager: getProvider(inferredName)
+    end
+    
+    Manager-->>-Service: 返回Provider实例
+    Service->>+Adapter: getEmailContent(address, id, accessToken?)
+    Adapter->>+External: 调用邮件详情API<br/>(各Provider的API路径不同)
+    External-->>-Adapter: 完整邮件内容
+    Adapter->>Adapter: 解析HTML/文本内容<br/>提取附件信息
+    Adapter-->>-Service: 返回ChannelResponse<EmailMessage>
+    Service-->>-Auth: 返回ApiResponse结果
+    Auth-->>-Client: JSON响应 + provider名称
+```
+
 ## 🎯 设计理念
 
 为了简化用户对接，设计统一的邮件获取接口，用户只需要传递：

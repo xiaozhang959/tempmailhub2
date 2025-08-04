@@ -36,7 +36,7 @@ async function deployToDeno() {
     const projectName = process.env.DENO_PROJECT || 'tempmailhub';
     
     const { stdout, stderr } = await execAsync(
-      `deno deploy --project=${projectName} --include=src,deno.json src/index.ts`
+      `deno deploy --project=${projectName} --include=src,deno.json --unstable-sloppy-imports src/index.ts`
     );
     
     if (stderr) {

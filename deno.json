@@ -1,13 +1,15 @@
 {
   "tasks": {
-    "start": "deno run --allow-net --allow-env --allow-read src/index.ts",
-    "dev": "deno run --allow-net --allow-env --allow-read --watch src/index.ts"
+    "start": "deno run --allow-net --allow-env --allow-read --unstable-sloppy-imports src/index.ts",
+    "dev": "deno run --allow-net --allow-env --allow-read --watch --unstable-sloppy-imports src/index.ts"
   },
   "imports": {
-    "hono": "https://deno.land/x/hono@v4.6.3/mod.ts",
-    "hono/cors": "https://deno.land/x/hono@v4.6.3/middleware/cors/index.ts",
-    "hono/logger": "https://deno.land/x/hono@v4.6.3/middleware/logger/index.ts",
-    "hono/pretty-json": "https://deno.land/x/hono@v4.6.3/middleware/pretty-json/index.ts",
-    "hono/bearer-auth": "https://deno.land/x/hono@v4.6.3/middleware/bearer-auth/index.ts"
-  }
+    "hono": "npm:hono@^4.6.3",
+    "hono/cors": "npm:hono/cors",
+    "hono/logger": "npm:hono/logger",
+    "hono/pretty-json": "npm:hono/pretty-json",
+    "hono/bearer-auth": "npm:hono/bearer-auth",
+    "hono/adapter": "npm:hono/adapter"
+  },
+  "nodeModulesDir": "auto"
 } 

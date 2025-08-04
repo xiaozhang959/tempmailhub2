@@ -193,9 +193,6 @@ export class MailTmProvider implements IMailProvider {
     const startTime = Date.now();
     
     try {
-      // 确保连接已测试且域名已加载
-      await this.ensureConnectionTested();
-      
       this.updateStats('request');
 
       const prefix = request.prefix || generateEmailPrefix(10);
@@ -454,43 +451,7 @@ export class MailTmProvider implements IMailProvider {
     }
   }
 
-  async verifyEmail(emailAddress: string): Promise<ChannelResponse<EmailAddress>> {
-    const token = this.sessionTokens.get(emailAddress);
-    
-    if (!token) {
-      return {
-        success: false,
-        error: this.createError(
-          ChannelErrorType.AUTHENTICATION_ERROR,
-          'Email address not found or not authenticated'
-        ),
-        metadata: {
-          provider: this.name,
-          responseTime: 0,
-          requestId: generateId()
-        }
-      };
-    }
 
-    const [username, domain] = emailAddress.split('@');
-    
-    return {
-      success: true,
-      data: {
-        address: emailAddress,
-        domain,
-        username,
-        createdAt: new Date(),
-        provider: this.name,
-        isActive: true
-      },
-      metadata: {
-        provider: this.name,
-        responseTime: 0,
-        requestId: generateId()
-      }
-    };
-  }
 
   async deleteEmail(emailAddress: string): Promise<ChannelResponse<boolean>> {
     const token = this.sessionTokens.get(emailAddress);

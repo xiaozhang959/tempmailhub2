@@ -119,9 +119,6 @@ export class MinMailProvider implements IMailProvider {
     const startTime = Date.now();
     
     try {
-      // 确保连接已测试
-      await this.ensureConnectionTested();
-      
       this.updateStats('request');
 
       const url = 'https://minmail.app/api/mail/address';
@@ -320,27 +317,7 @@ export class MinMailProvider implements IMailProvider {
     };
   }
 
-  async verifyEmail(emailAddress: string): Promise<ChannelResponse<EmailAddress>> {
-    // MinMail 不提供邮箱验证接口，返回基本信息
-    const [username, domain] = emailAddress.split('@');
-    
-    return {
-      success: true,
-      data: {
-        address: emailAddress,
-        domain,
-        username,
-        createdAt: new Date(),
-        provider: this.name,
-        isActive: true
-      },
-      metadata: {
-        provider: this.name,
-        responseTime: 0,
-        requestId: generateId()
-      }
-    };
-  }
+
 
   async getHealth(): Promise<ChannelHealth> {
     // 如果还没有测试过连接，现在测试一次

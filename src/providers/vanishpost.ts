@@ -29,12 +29,7 @@ interface VanishPostGenerateResponse {
   success: boolean;
 }
 
-interface VanishPostVerifyResponse {
-  success: boolean;
-  message: string;
-  emailAddress: string;
-  expirationDate: string;
-}
+
 
 interface VanishPostEmail {
   mail_id: string;
@@ -309,81 +304,7 @@ export class VanishPostProvider implements IMailProvider {
     };
   }
 
-  async verifyEmail(emailAddress: string): Promise<ChannelResponse<EmailAddress>> {
-    const startTime = Date.now();
-    
-    try {
-      const encodedEmail = encodeURIComponent(emailAddress);
-      const response = await httpClient.get<VanishPostVerifyResponse>(
-        `${this.baseUrl}/api/verify?address=${encodedEmail}`,
-        {
-          headers: {
-            'accept': '*/*',
-            'accept-language': 'zh-CN,zh;q=0.9',
-            'referer': `${this.baseUrl}/`,
-            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36'
-          },
-          timeout: this.config.timeout,
-          retries: this.config.retries
-        }
-      );
 
-      if (!response.ok) {
-        throw this.createError(
-          ChannelErrorType.API_ERROR,
-          `VanishPost API returned ${response.status}: ${response.statusText}`,
-          response.status
-        );
-      }
-
-      const data = response.data;
-      if (!data.success) {
-        return {
-          success: false,
-          error: this.createError(ChannelErrorType.API_ERROR, data.message || 'Email verification failed'),
-          metadata: {
-            provider: this.name,
-            responseTime: Date.now() - startTime,
-            requestId: generateId()
-          }
-        };
-      }
-
-      const [username, domain] = emailAddress.split('@');
-      
-      return {
-        success: true,
-        data: {
-          address: emailAddress,
-          domain,
-          username,
-          createdAt: new Date(),
-          provider: this.name,
-          isActive: true,
-          expiresAt: new Date(data.expirationDate)
-        },
-        metadata: {
-          provider: this.name,
-          responseTime: Date.now() - startTime,
-          requestId: generateId()
-        }
-      };
-
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error as ChannelError : this.createError(
-          ChannelErrorType.UNKNOWN_ERROR,
-          error instanceof Error ? error.message : String(error)
-        ),
-        metadata: {
-          provider: this.name,
-          responseTime: Date.now() - startTime,
-          requestId: generateId()
-        }
-      };
-    }
-  }
 
   async getHealth(): Promise<ChannelHealth> {
     const testResult = await this.testConnection();

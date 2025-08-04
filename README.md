@@ -6,7 +6,7 @@
 
 - 🔗 **多服务商聚合**: 集成 MinMail、TempMail Plus、Mail.tm、EtempMail、VanishPost 等多个临时邮箱服务
 - 🌍 **多平台部署**: 支持 Cloudflare Workers、Deno、Vercel、Node.js 等多种部署平台
-- ⚙️ **动态配置**: 支持渠道的动态启用/禁用和优先级调整
+- 🔐 **双层认证**: TempMailHub API Key + Provider AccessToken 保障安全
 - 🔄 **智能重试**: 内置重试机制和错误处理
 - 📊 **健康监控**: 实时监控各渠道状态和统计信息
 - 🛡️ **类型安全**: 完整的 TypeScript 类型定义
@@ -17,149 +17,103 @@
 
 - Node.js 18+ 或 Deno 1.30+ 或 Bun 1.0+
 
-### 安装依赖
+### 安装与启动
 
 ```bash
+# 安装依赖
 npm install
-# 或
-yarn install
-# 或
-pnpm install
-```
 
-### 本地开发
-
-```bash
-# Node.js
-npm run dev:node
-
-# Deno
-npm run dev:deno
-
-# Bun
-npm run dev:bun
-
-# Cloudflare Workers
+# 启动开发服务器（推荐 Cloudflare Workers）
 npm run dev
+
+# 访问服务
+open http://localhost:8787
 ```
 
-### 部署
+### 🔐 安全配置（可选）
 
-#### Cloudflare Workers
+设置 API Key 以启用认证保护：
 
 ```bash
-npm run deploy:cloudflare
+# 本地开发
+export TEMPMAILHUB_API_KEY="your-secret-api-key"
+
+# 或创建 .env 文件
+echo "TEMPMAILHUB_API_KEY=your-secret-api-key" > .env
 ```
 
-#### Vercel
+**认证效果**：
+- 🔓 未设置：所有端点公开访问
+- 🔒 已设置：核心邮件操作需要 Bearer Token 认证
 
-```bash
-npm run deploy:vercel
-```
+## 📖 文档
 
-#### Deno Deploy
-
-```bash
-deno deploy --project=your-project src/index.ts
-```
-
-## 📋 API 接口
-
-### 创建临时邮箱
-
-```http
-POST /api/mail/create
-Content-Type: application/json
-
-{
-  "provider": "minmail",           // 可选，指定服务商
-  "domain": "atminmail.com",       // 可选，指定域名
-  "prefix": "custom",              // 可选，自定义前缀
-  "expirationMinutes": 60          // 可选，过期时间（分钟）
-}
-```
-
-### 获取邮件列表
-
-```http
-GET /api/mail/:address/emails?limit=20&offset=0&unread=true&since=2024-01-01T00:00:00Z
-```
-
-### 获取邮件详情
-
-```http
-GET /api/mail/:address/emails/:emailId
-```
-
-### 验证邮箱
-
-```http
-GET /api/mail/:address/verify
-```
-
-### 健康检查
-
-```http
-GET /api/mail/providers/health
-```
-
-### 统计信息
-
-```http
-GET /api/mail/providers/stats
-```
+| 文档 | 内容 |
+|------|------|
+| [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) | 📚 **完整API文档** - 接口说明、使用示例、测试方法 |
+| [API_SECURITY.md](./API_SECURITY.md) | 🔐 **安全配置** - API Key 认证详细配置 |
 
 ## 🎯 支持的服务商
 
-| 服务商 | 域名示例 | 特性 |
-|--------|----------|------|
-| MinMail | atminmail.com | 自动过期、高可用 |
-| TempMail Plus | mailto.plus, fexpost.com | 多域名支持 |
-| Mail.tm | somoj.com | 需要注册、API 稳定 |
-| EtempMail | ohm.edu.pl, cross.edu.pl, usa.edu.pl, beta.edu.pl | 教育域名，支持指定域名 |
-| VanishPost | genmacos.com | 15分钟自动过期 |
+| 服务商 | 域名数量 | 需要 AccessToken | 域名自定义 | 特性 |
+|-------|---------|----------------|-----------|------|
+| **MinMail** | 1个 | ❌ | ❌ | 自动过期、高可用 |
+| **TempMail Plus** | 9个 | ❌ | ✅ | 最多域名选择 |
+| **Mail.tm** | 1个 | ✅ | ❌ | 创建时返回 accessToken |
+| **EtempMail** | 4个 | ❌ | ✅ | 教育域名 |
+| **VanishPost** | 动态 | ❌ | ❌ | 15分钟自动过期 |
 
-## ⚙️ 配置
+## 📋 基本 API 使用
 
-### 环境变量配置
+### 1. 创建邮箱
 
 ```bash
-# 服务器配置
-PORT=8080
-HOST=0.0.0.0
-
-# 安全配置
-API_KEY=your-api-key
-
-# 渠道启用状态
-CHANNEL_MINMAIL_ENABLED=true
-CHANNEL_TEMPMAILPLUS_ENABLED=true
-CHANNEL_MAILTM_ENABLED=true
-CHANNEL_ETEMPMAIL_ENABLED=false
-CHANNEL_VANISHPOST_ENABLED=true
+curl -X POST http://localhost:8787/api/mail/create \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{"provider": "mailtm"}'
 ```
 
-### 渠道配置
+### 2. 获取邮件
 
-项目支持动态配置各个渠道的优先级、超时时间、重试次数等参数。
+```bash
+curl -X POST http://localhost:8787/api/mail/list \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "address": "user@somoj.com",
+    "accessToken": "provider_token"
+  }'
+```
 
-```typescript
-// src/config/index.ts
-export const defaultConfig = {
-  channels: {
-    minmail: {
-      enabled: true,
-      priority: 1,           // 优先级（数字越小优先级越高）
-      timeout: 10000,        // 请求超时时间（毫秒）
-      retries: 2,            // 重试次数
-      rateLimit: {
-        requests: 30,        // 请求数量
-        window: 60           // 时间窗口（秒）
-      }
-    }
-    // ... 其他渠道配置
-  }
-};
+> 💡 **提示**: 详细的 API 使用说明、参数介绍、错误处理请查看 [API_DOCUMENTATION.md](./API_DOCUMENTATION.md)
+
+## 🚀 部署
+
+### Cloudflare Workers
+
+```bash
+# 设置 API Key（可选）
+wrangler secret put TEMPMAILHUB_API_KEY
+
+# 部署
+npm run deploy:cloudflare
+```
+
+### Vercel
+
+```bash
+# 设置环境变量（可选）
+vercel env add TEMPMAILHUB_API_KEY
+
+# 部署
+npm run deploy:vercel
+```
+
+### Deno Deploy
+
+```bash
+deno deploy --project=your-project src/index.ts
 ```
 
 ## 🏗️ 项目架构
@@ -167,67 +121,38 @@ export const defaultConfig = {
 ```
 TempMailHub/
 ├── src/
-│   ├── types/              # 类型定义
-│   ├── interfaces/         # 接口定义
-│   ├── config/            # 配置管理
-│   ├── providers/         # 渠道适配器
-│   ├── services/          # 业务逻辑
-│   ├── routes/            # 路由处理
-│   ├── utils/             # 工具函数
+│   ├── providers/         # 邮件服务商适配器
+│   ├── services/          # 业务逻辑层
+│   ├── middleware/        # 认证中间件
+│   ├── types/             # TypeScript 类型定义
 │   └── index.ts           # 应用入口
-├── wrangler.toml          # Cloudflare Workers 配置
-├── vercel.json            # Vercel 配置
-└── README.md
+├── API_DOCUMENTATION.md   # 完整API文档
+├── API_SECURITY.md        # 安全配置文档
+└── README.md              # 项目说明
 ```
 
 ### 核心组件
 
 - **Provider 适配器**: 统一不同服务商的 API 接口
-- **配置管理器**: 动态配置和渠道管理
-- **服务层**: 业务逻辑和错误处理
-- **路由层**: HTTP 请求处理
+- **双层认证**: TempMailHub API Key + Provider AccessToken
+- **服务层**: 统一业务逻辑和错误处理
+- **类型安全**: 完整的 TypeScript 支持
 
-## 🔧 开发指南
+## 🔧 开发
 
-### 添加新的服务商
+### 添加新服务商
 
-1. 在 `src/providers/` 目录下创建新的适配器
+1. 在 `src/providers/` 创建适配器文件
 2. 实现 `IMailProvider` 接口
-3. 在 `src/providers/index.ts` 中注册新服务商
-4. 更新配置文件添加相关配置
+3. 在 `src/providers/index.ts` 注册服务商
 
-### 自定义中间件
-
-项目基于 Hono 框架，支持添加自定义中间件：
-
-```typescript
-// 添加 CORS 中间件
-app.use('*', cors());
-
-// 添加日志中间件
-app.use('*', logger());
-
-// 添加认证中间件
-app.use('/api/*', async (c, next) => {
-  // 认证逻辑
-  await next();
-});
-```
-
-## 🧪 测试
+### 测试
 
 ```bash
 # 运行测试
 npm test
 
-# 运行测试并生成覆盖率报告
-npm run test:coverage
-
-# 测试单个提供者
-npm run test -- providers/minmail.test.ts
-```
-
-## 📦 构建
+### 构建
 
 ```bash
 npm run build
@@ -238,24 +163,34 @@ npm run build
 欢迎提交 Issue 和 Pull Request！
 
 1. Fork 本项目
-2. 创建新的功能分支 (`git checkout -b feature/AmazingFeature`)
+2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
 3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
+4. 推送分支 (`git push origin feature/AmazingFeature`)
 5. 打开 Pull Request
 
 ## 📄 许可证
 
-本项目基于 MIT 许可证开源 - 查看 [LICENSE](LICENSE) 文件了解更多详情。
+本项目基于 MIT 许可证开源 - 查看 [LICENSE](LICENSE) 文件了解详情。
 
 ## 🙏 致谢
 
+### 技术框架
 - [Hono](https://hono.dev/) - 轻量级 Web 框架
-- 各临时邮箱服务提供商的 API
 
-## 📞 联系方式
+### 临时邮箱服务提供商
+本项目感谢以下优秀的临时邮箱服务提供商：
 
-- 项目主页: https://github.com/your-username/tempmailhub
-- 问题反馈: https://github.com/your-username/tempmailhub/issues
+- [MinMail](https://minmail.app/) - 自动过期、高可用的临时邮箱服务
+- [TempMail Plus](https://tempmail.plus/) - 支持多域名选择的临时邮箱服务  
+- [Mail.tm](https://mail.tm/) - 稳定可靠的临时邮箱API服务
+- [EtempMail](https://etempmail.com/) - 提供教育域名的临时邮箱服务
+- [VanishPost](https://vanishpost.com/) - 15分钟自动过期的临时邮箱服务
+
+> **⚠️ 重要说明**: 
+> 
+> 本项目 **TempMailHub** 仅提供 **API 聚合服务**，不提供 Web UI 界面。
+> 
+> 如需**图形界面体验**，请直接访问上述各供应商的官方网站。
 
 ---
 

@@ -155,49 +155,7 @@ export class MailService {
     }
   }
 
-  /**
-   * 验证邮箱地址
-   */
-  async verifyEmail(emailAddress: string, providerName?: string): Promise<ApiResponse<EmailAddress>> {
-    try {
-      const provider = providerName ? 
-        providerManager.getProvider(providerName) :
-        this.inferProviderFromEmail(emailAddress);
 
-      if (!provider) {
-        return {
-          success: false,
-          error: 'No provider found for the email address',
-          timestamp: new Date().toISOString()
-        };
-      }
-
-      const response = await provider.verifyEmail(emailAddress);
-
-      if (response.success && response.data) {
-        return {
-          success: true,
-          data: response.data,
-          timestamp: new Date().toISOString(),
-          provider: provider.name
-        };
-      } else {
-        return {
-          success: false,
-          error: response.error?.message || 'Failed to verify email',
-          timestamp: new Date().toISOString(),
-          provider: provider.name
-        };
-      }
-
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : String(error),
-        timestamp: new Date().toISOString()
-      };
-    }
-  }
 
   /**
    * 获取所有提供者的健康状态

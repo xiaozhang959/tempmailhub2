@@ -67,7 +67,7 @@ export interface IMailProvider {
    * @param emailAddress 邮箱地址
    * @returns 邮箱信息
    */
-  verifyEmail(emailAddress: string): Promise<ChannelResponse<EmailAddress>>;
+
 
   /**
    * 删除邮箱（如果支持）

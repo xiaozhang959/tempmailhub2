@@ -107,34 +107,7 @@ mail.post('/content', async (c) => {
   }
 });
 
-/**
- * 验证邮箱地址
- * GET /mail/:address/verify
- */
-mail.get('/:address/verify', async (c) => {
-  try {
-    const address = c.req.param('address');
-    const provider = c.req.query('provider');
-    
-    if (!address) {
-      return c.json({
-        success: false,
-        error: 'Email address is required',
-        timestamp: new Date().toISOString()
-      }, 400);
-    }
 
-    const result = await mailService.verifyEmail(address, provider);
-    
-    return c.json(result, result.success ? 200 : 404);
-  } catch (error) {
-    return c.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Internal server error',
-      timestamp: new Date().toISOString()
-    }, 500);
-  }
-});
 
 /**
  * 获取提供者健康状态

@@ -31,20 +31,37 @@ export class ProviderManager implements IProviderManager {
   getBestProvider(capabilities?: Partial<ChannelCapabilities>): IMailProvider | undefined {
     const enabledProviders = this.getEnabledProviders();
     
-    if (!capabilities) {
-      return enabledProviders[0]; // 返回优先级最高的
-    }
-
     // 根据能力筛选
-    const compatibleProviders = enabledProviders.filter(provider => {
-      const providerCaps = provider.capabilities;
-      return Object.entries(capabilities).every(([key, required]) => {
-        if (!required) return true;
-        return providerCaps[key as keyof ChannelCapabilities];
-      });
+    const compatibleProviders = capabilities ? 
+      enabledProviders.filter(provider => {
+        const providerCaps = provider.capabilities;
+        return Object.entries(capabilities).every(([key, required]) => {
+          if (!required) return true;
+          return providerCaps[key as keyof ChannelCapabilities];
+        });
+      }) : enabledProviders;
+
+    // 按性能优先级排序（优先选择快速的provider）
+    const performanceOrder = ['tempmailplus', 'minmail', 'vanishpost', 'mailtm', 'etempmail'];
+    
+    const sortedProviders = compatibleProviders.sort((a, b) => {
+      const aIndex = performanceOrder.indexOf(a.name);
+      const bIndex = performanceOrder.indexOf(b.name);
+      
+      // 如果都在性能列表中，按顺序排序
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      
+      // 如果只有一个在列表中，优先选择在列表中的
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      
+      // 都不在列表中，保持原顺序
+      return 0;
     });
 
-    return compatibleProviders[0];
+    return sortedProviders[0];
   }
 
   async getAllHealth(): Promise<Record<string, ChannelHealth>> {

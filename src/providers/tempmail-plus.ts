@@ -310,39 +310,7 @@ export class TempMailPlusProvider implements IMailProvider {
     }
   }
 
-  async verifyEmail(emailAddress: string): Promise<ChannelResponse<EmailAddress>> {
-    const [username, domain] = emailAddress.split('@');
-    
-    // 检查域名是否支持
-    if (!this.domains.includes(domain)) {
-      return {
-        success: false,
-        error: this.createError(ChannelErrorType.API_ERROR, `Domain ${domain} is not supported`),
-        metadata: {
-          provider: this.name,
-          responseTime: 0,
-          requestId: generateId()
-        }
-      };
-    }
-    
-    return {
-      success: true,
-      data: {
-        address: emailAddress,
-        domain,
-        username,
-        createdAt: new Date(),
-        provider: this.name,
-        isActive: true
-      },
-      metadata: {
-        provider: this.name,
-        responseTime: 0,
-        requestId: generateId()
-      }
-    };
-  }
+
 
   async getHealth(): Promise<ChannelHealth> {
     const testResult = await this.testConnection();

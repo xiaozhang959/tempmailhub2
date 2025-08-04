@@ -129,6 +129,49 @@ curl -X POST http://localhost:8787/api/mail/list \
 
 > 💡 **提示**：所有平台部署后，建议设置 `TEMPMAILHUB_API_KEY` 环境变量以启用API认证。
 
+### Docker 部署
+
+#### 使用 Docker Compose (推荐)
+
+1. 克隆仓库并进入项目目录
+   ```bash
+   git clone https://github.com/hzruo/tempmailhub.git
+   cd tempmailhub
+   ```
+
+2. 启动服务
+   ```bash
+   docker-compose up -d
+   ```
+
+3. 访问服务
+   ```bash
+   curl http://localhost:8787/health
+   ```
+
+#### 使用 Docker 命令
+
+```bash
+# 构建镜像
+docker build -t tempmailhub .
+
+# 运行容器
+docker run -d -p 8787:8787 --name tempmailhub tempmailhub
+
+# 设置API Key (可选)
+docker run -d -p 8787:8787 -e TEMPMAILHUB_API_KEY=your-secret-key --name tempmailhub tempmailhub
+```
+
+#### 使用预构建镜像
+
+```bash
+# 拉取最新镜像
+docker pull ghcr.io/hzruo/tempmailhub:latest
+
+# 运行容器
+docker run -d -p 8787:8787 --name tempmailhub ghcr.io/hzruo/tempmailhub:latest
+```
+
 ### 手动部署
 
 #### Cloudflare Workers

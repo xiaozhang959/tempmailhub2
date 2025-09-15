@@ -490,11 +490,11 @@ app.get('/api/info', (c) => {
         'Error handling and retry mechanisms'
       ],
       providers: [
-        { name: 'MinMail', domains: ['atminmail.com'], customizable: false },
-        { name: 'TempMail Plus', domains: ['mailto.plus', 'fexpost.com', 'fexbox.org', 'mailbox.in.ua', 'rover.info', 'chitthi.in', 'fextemp.com', 'any.pink', 'merepost.com'], customizable: true },
-        { name: 'Mail.tm', domains: ['somoj.com'], customizable: false },
-        { name: 'EtempMail', domains: ['cross.edu.pl', 'ohm.edu.pl', 'usa.edu.pl', 'beta.edu.pl'], customizable: false },
-        { name: 'VanishPost', domains: ['服务端分配'], customizable: false }
+        { id: 'minmail', name: 'MinMail', domains: ['atminmail.com'], customizable: false },
+        { id: 'tempmailplus', name: 'TempMail Plus', domains: ['mailto.plus', 'fexpost.com', 'fexbox.org', 'mailbox.in.ua', 'rover.info', 'chitthi.in', 'fextemp.com', 'any.pink', 'merepost.com'], customizable: true },
+        { id: 'mailtm', name: 'Mail.tm', domains: ['somoj.com'], customizable: false },
+        { id: 'etempmail', name: 'EtempMail', domains: ['cross.edu.pl', 'ohm.edu.pl', 'usa.edu.pl', 'beta.edu.pl'], customizable: false },
+        { id: 'vanishpost', name: 'VanishPost', domains: ['服务端分配'], customizable: false }
       ],
       authentication: {
         enabled: getAuthConfig(c.env).enabled,
